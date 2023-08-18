@@ -1,0 +1,15 @@
+#!/bin/env bash
+
+while true; do
+	BATTERY_STATUS=$(acpi -b | cut -d : -f 2 | cut -d , -f 1 | sed -e 's/^[[:space:]]*//')
+	BATTERY_PORCENT=$(acpi -b | cut -d , -f 2 | cut -d % -f 1 | sed -e 's/^[[:space:]]*//')
+
+	if [[ "$BATTERY_STATUS" == "Discharging" ]]; then
+		if [ $BATTERY_PORCENT -le 15 ]; then
+			notify-send -r 9995 -u critical -i battery-level-10-symbolic "Charge your battery. It is $BATTERY_PORCENT%"
+		fi
+	fi
+
+	# Every 2 minutes, ask again
+	sleep 120
+done
